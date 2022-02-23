@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,6 +29,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
   private final GenericHID leftJoystick = new GenericHID(0);
   private final GenericHID rightJoystick = new GenericHID(1);
@@ -76,6 +79,7 @@ public class RobotContainer {
     gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);
 
     intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, intakeToggle, () -> (OCButtonController.getRawAxis(0) + 1)/2));
+    shooterButton.whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem));
   }
 
   /**

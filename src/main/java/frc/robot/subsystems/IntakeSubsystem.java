@@ -10,13 +10,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final CANSparkMax m_backIntakeMotor;
-  private final CANSparkMax m_frontIntakeMotor;
+  private final CANSparkMax m_intakeMotor;
 
   /** Creates a new Climber. */
   public IntakeSubsystem() {
-    this.m_backIntakeMotor = new CANSparkMax(20, MotorType.kBrushless);
-    this.m_frontIntakeMotor = new CANSparkMax(21, MotorType.kBrushless);
+    this.m_intakeMotor = new CANSparkMax(14, MotorType.kBrushless);
   }
 
   @Override
@@ -25,7 +23,6 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setIntakeSpeed(double speed) {
-    m_backIntakeMotor.set(speed);
-    m_frontIntakeMotor.set(speed);
+    m_intakeMotor.set(speed);
   }
 }
