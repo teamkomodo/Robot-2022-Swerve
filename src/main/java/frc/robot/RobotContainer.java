@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShooterCommand;
@@ -77,16 +78,18 @@ public class RobotContainer {
 
     Button shooterButton = new Button(() -> OCButtonController.getRawButton(4));
     Button shooterToggle = new Button(() -> OCButtonController.getRawButton(1));
-    DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1)/2;
+    DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1)/2;
     
     Button climberButton = new Button(() -> OCButtonController.getRawButton(5));
     Button climberToggle = new Button(() -> OCButtonController.getRawButton(2));
+    DoubleSupplier climberTrimSupplier = () -> (OCButtonController.getRawAxis(2) + 1)/2;
 
     // Left button zeros the gyroscope
     gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);
 
     intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, intakeToggle, intakeTrimSupplier));
     shooterButton.whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, shooterToggle, shooterTrimSupplier));
+    climberToggle.whileHeld(new ClimberCommand(m_climberSubsystem, climberTrimSupplier));
   }
 
   /**
