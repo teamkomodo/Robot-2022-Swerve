@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -30,6 +33,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
 
   private final GenericHID leftJoystick = new GenericHID(0);
   private final GenericHID rightJoystick = new GenericHID(1);
@@ -47,6 +51,7 @@ public class RobotContainer {
     // Right stick X axis -> rotation
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
+        m_climberSubsystem,
         () -> -modifyAxis(rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(rightJoystick.getRawAxis(1)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(leftJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
@@ -68,9 +73,11 @@ public class RobotContainer {
 
     Button intakeButton = new Button(() -> OCButtonController.getRawButton(3));
     Button intakeToggle = new Button(() -> OCButtonController.getRawButton(0));
+    DoubleSupplier intakeTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1)/2;
 
     Button shooterButton = new Button(() -> OCButtonController.getRawButton(4));
     Button shooterToggle = new Button(() -> OCButtonController.getRawButton(1));
+    DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1)/2;
     
     Button climberButton = new Button(() -> OCButtonController.getRawButton(5));
     Button climberToggle = new Button(() -> OCButtonController.getRawButton(2));
@@ -78,8 +85,8 @@ public class RobotContainer {
     // Left button zeros the gyroscope
     gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);
 
-    intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, intakeToggle, () -> (OCButtonController.getRawAxis(0) + 1)/2));
-    shooterButton.whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem));
+    intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, intakeToggle, intakeTrimSupplier));
+    shooterButton.whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, shooterToggle, shooterTrimSupplier));
   }
 
   /**
