@@ -52,8 +52,24 @@ public class ClimberSubsystem extends SubsystemBase {
     return true;
   }
 
-  private void setRotationSpeed(double speed) {
+  private double getRotationPosition() {
+    return m_leftActuatorMotor.getSelectedSensorPosition() / 2048;
+  }
+
+  public void setRotationSpeed(double speed) {
     if (!checkRotationAlignment()) {
+      m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
+      m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
+
+      return;
+    }
+    if (getRotationPosition() > 100 && speed >= 0) {
+      m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
+      m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
+
+      return;
+    }
+    if(getRotationPosition() < 0 && speed <= 0) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
@@ -62,10 +78,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
     m_leftActuatorMotor.set(ControlMode.PercentOutput, speed);
     m_rightActuatorMotor.set(ControlMode.PercentOutput, speed + getRotationDiff() / 5);
-  }
-
-  private double getRotationPosition() {
-    return m_leftActuatorMotor.getSelectedSensorPosition() / 2048;
   }
 
   public void setRotationPosition(double position) {
@@ -78,12 +90,23 @@ public class ClimberSubsystem extends SubsystemBase {
     setRotationSpeed(rotationPIDController.calculate(getRotationPosition(), position));
   }
 
-  private void setChainsawSpeed(double speed) {
-    m_chainsawMotor.set(speed);
-  }
-
   private double getChainsawPosition() {
     return m_chainsawMotor.getEncoder().getPosition();
+  }
+
+  public void setChainsawSpeed(double speed) {
+    if (getChainsawPosition() > 4 && speed >= 0) {
+      m_chainsawMotor.set(speed);
+
+      return;
+    }
+    if(getChainsawPosition() < 0 && speed <= 0) {
+      m_chainsawMotor.set(speed);
+
+      return;
+    }
+
+    m_chainsawMotor.set(speed);
   }
 
   public void setChainsawPosition(double position) {

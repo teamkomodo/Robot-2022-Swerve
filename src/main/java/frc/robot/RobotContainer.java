@@ -82,14 +82,15 @@ public class RobotContainer {
     
     Button climberButton = new Button(() -> OCButtonController.getRawButton(5));
     Button climberToggle = new Button(() -> OCButtonController.getRawButton(2));
-    DoubleSupplier climberTrimSupplier = () -> (OCButtonController.getRawAxis(2) + 1)/2;
+    DoubleSupplier climberRotationSupplier = () -> leftJoystick.getRawAxis(0);
+    DoubleSupplier climberChainsawSuppler = () -> rightJoystick.getRawAxis(0);
 
     // Left button zeros the gyroscope
     gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);
 
     intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, intakeToggle, intakeTrimSupplier));
     shooterButton.whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, shooterToggle, shooterTrimSupplier));
-    climberToggle.whileHeld(new ClimberCommand(m_climberSubsystem, climberTrimSupplier));
+    climberButton.toggleWhenPressed(new ClimberCommand(m_climberSubsystem, climberToggle, climberRotationSupplier, climberChainsawSuppler));
   }
 
   /**
