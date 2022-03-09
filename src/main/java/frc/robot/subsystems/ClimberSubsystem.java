@@ -25,9 +25,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
-    this.m_leftActuatorMotor = new TalonFX(20);
-    this.m_rightActuatorMotor = new TalonFX(21);
-    this.m_chainsawMotor = new CANSparkMax(22, MotorType.kBrushless);
+    this.m_leftActuatorMotor = new TalonFX(13);
+    this.m_rightActuatorMotor = new TalonFX(12);
+    this.m_chainsawMotor = new CANSparkMax(18, MotorType.kBrushless);
 
     this.climbing = false;
 
@@ -57,13 +57,14 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void setRotationSpeed(double speed) {
+    System.out.println("Rotation >> " + getRotationPosition());
     if (!checkRotationAlignment()) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
       return;
     }
-    if (getRotationPosition() > 100 && speed >= 0) {
+    if (getRotationPosition() > 247 && speed >= 0) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
@@ -75,7 +76,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
       return;
     }
-
     m_leftActuatorMotor.set(ControlMode.PercentOutput, speed);
     m_rightActuatorMotor.set(ControlMode.PercentOutput, speed + getRotationDiff() / 5);
   }
@@ -95,13 +95,14 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void setChainsawSpeed(double speed) {
-    if (getChainsawPosition() > 4 && speed >= 0) {
-      m_chainsawMotor.set(speed);
+    System.out.println("Chainsaw >> " + getChainsawPosition());
+    if (getChainsawPosition() > 90 && speed >= 0) {
+      m_chainsawMotor.set(0);
 
       return;
     }
-    if(getChainsawPosition() < 0 && speed <= 0) {
-      m_chainsawMotor.set(speed);
+    if(getChainsawPosition() < -90 && speed <= 0) {
+      m_chainsawMotor.set(0);
 
       return;
     }

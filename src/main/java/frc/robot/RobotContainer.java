@@ -50,12 +50,13 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
+
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
         m_climberSubsystem,
-        () -> -modifyAxis(rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(rightJoystick.getRawAxis(1)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(leftJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
+        () -> -modifyAxis(rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(rightJoystick.getRawAxis(2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -70,20 +71,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Button gyroZeroButton = new Button(() -> leftJoystick.getRawButton(0));
+    Button gyroZeroButton = new Button(() -> rightJoystick.getRawButton(1));
 
-    Button intakeButton = new Button(() -> OCButtonController.getRawButton(3));
-    Button intakeToggle = new Button(() -> OCButtonController.getRawButton(0));
+    Button intakeButton = new Button(() -> OCButtonController.getRawButton(4));
+    Button intakeToggle = new Button(() -> OCButtonController.getRawButton(1));
     DoubleSupplier intakeTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1)/2;
 
-    Button shooterButton = new Button(() -> OCButtonController.getRawButton(4));
-    Button shooterToggle = new Button(() -> OCButtonController.getRawButton(1));
+    Button shooterButton = new Button(() -> OCButtonController.getRawButton(5));
+    Button shooterToggle = new Button(() -> OCButtonController.getRawButton(2));
     DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1)/2;
     
-    Button climberButton = new Button(() -> OCButtonController.getRawButton(5));
-    Button climberToggle = new Button(() -> OCButtonController.getRawButton(2));
-    DoubleSupplier climberRotationSupplier = () -> leftJoystick.getRawAxis(0);
-    DoubleSupplier climberChainsawSuppler = () -> rightJoystick.getRawAxis(0);
+    Button climberButton = new Button(() -> OCButtonController.getRawButton(6));
+    Button climberToggle = new Button(() -> OCButtonController.getRawButton(3));
+    DoubleSupplier climberRotationSupplier = () -> leftJoystick.getRawAxis(1);
+    DoubleSupplier climberChainsawSuppler = () -> rightJoystick.getRawAxis(1);
 
     // Left button zeros the gyroscope
     gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);

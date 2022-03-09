@@ -12,8 +12,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterCommand extends CommandBase {
-  private final static int SHOOTER_RPM = 3000;
-  private final static double SHOOT_SPEED_TOLERANCE = 0.1;
+  private final static double SHOOTER_SPEED = 3000;
+  private final static double INJECTION_TOLERANCE = 0.1;
 
   private final ShooterSubsystem m_shooterSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
@@ -34,15 +34,18 @@ public class ShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.setShooterSpeed(trimSpeed(SHOOTER_RPM));
+    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED + 200));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - SHOOTER_RPM) / SHOOTER_RPM <= SHOOT_SPEED_TOLERANCE) {
-      m_shooterSubsystem.setIndexerSpeed(trimSpeed(1));
-      m_intakeSubsystem.setIntakeSpeed(trimSpeed(1));
+    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED + 200));
+
+    System.out.println("FLYWHEEL SPEED >> " + m_shooterSubsystem.getCurrentShooterSpeed());
+    if(Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - correctSpeed(SHOOTER_SPEED)) / correctSpeed(SHOOTER_SPEED) <= INJECTION_TOLERANCE) {
+      m_shooterSubsystem.setIndexerSpeed(correctSpeed(1));
+      m_intakeSubsystem.setIntakeSpeed(correctSpeed(1));
     } else {
       m_shooterSubsystem.setIndexerSpeed(0);
       m_intakeSubsystem.setIntakeSpeed(0);
@@ -57,18 +60,21 @@ public class ShooterCommand extends CommandBase {
     m_intakeSubsystem.setIntakeSpeed(0);
   }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
-
-  private double directionalizeSpeed(double speed) {
-    speed = Math.abs(speed);
+  private double directionSpeed(double speed) {
     return m_shooterToggle.getAsBoolean() ? -speed : speed;
   }
 
   private double trimSpeed(double speed) {
-    return directionalizeSpeed(speed) * m_shooterTrim.getAsDouble();
+    return speed * m_shooterTrim.getAsDouble();
+  }
+
+  private double correctSpeed(double speed) {
+    return trimSpeed(directionSpeed(speed));
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }

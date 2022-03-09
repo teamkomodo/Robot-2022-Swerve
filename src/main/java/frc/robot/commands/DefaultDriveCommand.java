@@ -33,7 +33,7 @@ public class DefaultDriveCommand extends CommandBase {
     public void execute() {
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of
         // field-oriented movement
-        if (m_climberSubsystem.climbing) {
+        if (!m_climberSubsystem.climbing) {
             m_drivetrainSubsystem.drive(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                             m_translationXSupplier.getAsDouble(),

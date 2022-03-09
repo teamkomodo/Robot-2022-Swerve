@@ -14,7 +14,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   /** Creates a new Climber. */
   public IntakeSubsystem() {
-    this.m_intakeMotor = new CANSparkMax(14, MotorType.kBrushless);
+    this.m_intakeMotor = new CANSparkMax(15, MotorType.kBrushless);
   }
 
   @Override
