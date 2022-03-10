@@ -84,7 +84,7 @@ public class RobotContainer {
 
     Button climberButton = new Button(() -> OCButtonController.getRawButton(6));
     Button climberToggle = new Button(() -> OCButtonController.getRawButton(3));
-    DoubleSupplier climberRotationSupplier = () -> leftJoystick.getRawAxis(1);
+    DoubleSupplier climberRotationSupplier = () -> -leftJoystick.getRawAxis(1);
     DoubleSupplier climberChainsawSuppler = () -> rightJoystick.getRawAxis(1);
 
     // Left button zeros the gyroscope
