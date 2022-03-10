@@ -19,7 +19,8 @@ public class ClimberCommand extends CommandBase {
   private final DoubleSupplier m_chainsawSpeed;
 
   /** Creates a new ClimberCommand. */
-  public ClimberCommand(ClimberSubsystem subsystem, Button climberToggle, DoubleSupplier rotationSpeed, DoubleSupplier chainsawSpeed) {
+  public ClimberCommand(ClimberSubsystem subsystem, Button climberToggle, DoubleSupplier rotationSpeed,
+      DoubleSupplier chainsawSpeed) {
     this.m_climberSubsystem = subsystem;
     this.m_climberToggle = climberToggle;
     this.m_rotationSpeed = rotationSpeed;
@@ -32,7 +33,7 @@ public class ClimberCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      m_climberSubsystem.climbing = m_climberToggle.getAsBoolean();
+    m_climberSubsystem.climbing = m_climberToggle.getAsBoolean();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,7 +41,7 @@ public class ClimberCommand extends CommandBase {
   public void execute() {
     m_climberSubsystem.climbing = m_climberToggle.getAsBoolean();
 
-    if(m_climberSubsystem.climbing) {
+    if (m_climberSubsystem.climbing) {
       m_climberSubsystem.setRotationSpeed(m_rotationSpeed.getAsDouble());
       m_climberSubsystem.setChainsawSpeed(m_chainsawSpeed.getAsDouble());
     } else {

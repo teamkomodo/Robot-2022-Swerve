@@ -10,7 +10,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -20,7 +19,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final double I_PID_ZONE = 0.;
   private static final double LEFT_FEED_FORWARD_PID = 0.000170;
   private static final double RIGHT_FEED_FORWARD_PID = 0.000175;
-  private static final double VELOCITY_PID_TOLERANCE = 30;
 
   private final CANSparkMax m_indexMotor;
 
@@ -55,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
-  
+
   private void initializePID() {
     m_leftShootMotorPIDController.setP(P_PID);
     m_leftShootMotorPIDController.setI(I_PID);
@@ -84,13 +82,12 @@ public class ShooterSubsystem extends SubsystemBase {
       m_leftShootMotor.set(0);
       m_rightShootMotor.set(0);
       return;
-    }
-    else if (speed < 0) {
+    } else if (speed < 0) {
       m_leftShootMotor.set(speed);
       m_rightShootMotor.set(speed);
       return;
     }
-    
+    speed += 200; // FIXME Corrects for PID-mistuning
     m_leftShootMotorPIDController.setReference(speed, ControlType.kVelocity);
     m_rightShootMotorPIDController.setReference(speed, ControlType.kVelocity);
   }

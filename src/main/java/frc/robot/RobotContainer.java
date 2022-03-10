@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commands.AutoComand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.IntakeCommand;
@@ -75,12 +76,12 @@ public class RobotContainer {
 
     Button intakeButton = new Button(() -> OCButtonController.getRawButton(4));
     Button intakeToggle = new Button(() -> OCButtonController.getRawButton(1));
-    DoubleSupplier intakeTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1)/2;
+    DoubleSupplier intakeTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1) / 2;
 
     Button shooterButton = new Button(() -> OCButtonController.getRawButton(5));
     Button shooterToggle = new Button(() -> OCButtonController.getRawButton(2));
-    DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1)/2;
-    
+    DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1) / 2;
+
     Button climberButton = new Button(() -> OCButtonController.getRawButton(6));
     Button climberToggle = new Button(() -> OCButtonController.getRawButton(3));
     DoubleSupplier climberRotationSupplier = () -> leftJoystick.getRawAxis(1);
@@ -90,8 +91,10 @@ public class RobotContainer {
     gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);
 
     intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, intakeToggle, intakeTrimSupplier));
-    shooterButton.whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, shooterToggle, shooterTrimSupplier));
-    climberButton.toggleWhenPressed(new ClimberCommand(m_climberSubsystem, climberToggle, climberRotationSupplier, climberChainsawSuppler));
+    shooterButton
+        .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, shooterToggle, shooterTrimSupplier));
+    climberButton.toggleWhenPressed(
+        new ClimberCommand(m_climberSubsystem, climberToggle, climberRotationSupplier, climberChainsawSuppler));
   }
 
   /**
@@ -100,8 +103,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new InstantCommand();
+    return new AutoComand(m_drivetrainSubsystem, m_intakeSubsystem, m_shooterSubsystem);
   }
 
   private static double deadband(double value, double deadband) {

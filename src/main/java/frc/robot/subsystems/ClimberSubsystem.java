@@ -70,7 +70,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
       return;
     }
-    if(getRotationPosition() < 0 && speed <= 0) {
+    if (getRotationPosition() < 0 && speed <= 0) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
@@ -101,7 +101,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
       return;
     }
-    if(getChainsawPosition() < -90 && speed <= 0) {
+    if (getChainsawPosition() < -90 && speed <= 0) {
       m_chainsawMotor.set(0);
 
       return;

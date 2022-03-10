@@ -21,29 +21,30 @@ public class ShooterCommand extends CommandBase {
   private final DoubleSupplier m_shooterTrim;
 
   /** Creates a new ShooterCommand. */
-  public ShooterCommand(ShooterSubsystem subsystem, IntakeSubsystem intakeSubsystem, Button shooterToggle, DoubleSupplier shooterTrim) {
+  public ShooterCommand(ShooterSubsystem subsystem, IntakeSubsystem intakeSubsystem, Button shooterToggle,
+      DoubleSupplier shooterTrim) {
     this.m_shooterSubsystem = subsystem;
     this.m_intakeSubsystem = intakeSubsystem;
     this.m_shooterToggle = shooterToggle;
     this.m_shooterTrim = shooterTrim;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
-    addRequirements(intakeSubsystem);
+    addRequirements(subsystem, intakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED + 200));
+    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED + 200));
+    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED));
 
     System.out.println("FLYWHEEL SPEED >> " + m_shooterSubsystem.getCurrentShooterSpeed());
-    if(Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - correctSpeed(SHOOTER_SPEED)) / correctSpeed(SHOOTER_SPEED) <= INJECTION_TOLERANCE) {
+    if (Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - correctSpeed(SHOOTER_SPEED))
+        / correctSpeed(SHOOTER_SPEED) <= INJECTION_TOLERANCE) {
       m_shooterSubsystem.setIndexerSpeed(correctSpeed(1));
       m_intakeSubsystem.setIntakeSpeed(correctSpeed(1));
     } else {
