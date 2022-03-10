@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -18,15 +19,17 @@ public class AutoComand extends CommandBase {
   private final DrivetrainSubsystem m_drivetrainSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
   private final ShooterSubsystem m_shooterSubsystem;
+  private final ClimberSubsystem m_climberSubsystem;
 
   private final Timer autoTimer;
 
   /** Creates a new AutoComand. */
   public AutoComand(DrivetrainSubsystem drivetrainSubsystem, IntakeSubsystem intakeSubsystem,
-      ShooterSubsystem shooterSubsystem) {
+      ShooterSubsystem shooterSubsystem, ClimberSubsystem climberSubsystem) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.m_intakeSubsystem = intakeSubsystem;
     this.m_shooterSubsystem = shooterSubsystem;
+    this.m_climberSubsystem = climberSubsystem;
 
     this.autoTimer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
@@ -57,6 +60,13 @@ public class AutoComand extends CommandBase {
       m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
     }
 
+    // Move chainsaw to correct position
+    if (autoTimer.get() <= 0.5) {
+      m_climberSubsystem.setChainsawSpeed(1);
+    } else {
+      m_climberSubsystem.setChainsawSpeed(0);
+    }
+
     // Shooter after driveback
     if (autoTimer.get() > DRIVEBACK_TIME) {
       m_shooterSubsystem.setShooterSpeed(SHOOTER_SPEED);
@@ -84,6 +94,7 @@ public class AutoComand extends CommandBase {
     m_intakeSubsystem.setIntakeSpeed(0);
     m_shooterSubsystem.setIndexerSpeed(0);
     m_shooterSubsystem.setShooterSpeed(0);
+    m_climberSubsystem.setChainsawSpeed(0);
   }
 
   // Returns true when the command should end.
