@@ -52,7 +52,7 @@ public class AutoComand extends CommandBase {
 
     // Drive back to get in position for shooter
     if (autoTimer.get() <= DRIVEBACK_TIME) {
-      m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 1, 0));
+      m_drivetrainSubsystem.drive(new ChassisSpeeds(50.0, 0.0, 0.0));
     } else {
       m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
     }
