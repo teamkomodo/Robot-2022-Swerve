@@ -64,7 +64,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
       return;
     }
-    if (getRotationPosition() > 247 && speed >= 0) {
+    if (getRotationPosition() > 250 && speed >= 0) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
