@@ -12,9 +12,9 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class AutoComand extends CommandBase {
+public class AutoCommand extends CommandBase {
   private static final double SHOOTER_DELAY = 1; // Time after auto start to start flywheel (seconds)
-  private static final double SHOOTER_RUN_LENGHT = 10; // Time to run shooter after flywheel start (seconds)
+  private static final double SHOOTER_RUN_LENGTH = 10; // Time to run shooter after flywheel start (seconds)
   private static final double SHOOTER_SPEED = 2500; // Target RPM for flywheel (RPM)
 
   private static final double DRIVEBACK_DELAY = 11; // Time after auto start to drive backwards (seconds)
@@ -28,7 +28,7 @@ public class AutoComand extends CommandBase {
   private final Timer autoTimer;
 
   /** Creates a new AutoComand. */
-  public AutoComand(DrivetrainSubsystem drivetrainSubsystem, IntakeSubsystem intakeSubsystem,
+  public AutoCommand(DrivetrainSubsystem drivetrainSubsystem, IntakeSubsystem intakeSubsystem,
       ShooterSubsystem shooterSubsystem, ClimberSubsystem climberSubsystem) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.m_intakeSubsystem = intakeSubsystem;
@@ -65,7 +65,7 @@ public class AutoComand extends CommandBase {
     }
 
     // Start shooter spinup
-    if (autoTimer.get() >= SHOOTER_DELAY && autoTimer.get() <= SHOOTER_DELAY + SHOOTER_RUN_LENGHT) {
+    if (autoTimer.get() >= SHOOTER_DELAY && autoTimer.get() <= SHOOTER_DELAY + SHOOTER_RUN_LENGTH) {
       m_shooterSubsystem.setShooterSpeed(SHOOTER_SPEED);
       if (Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - SHOOTER_SPEED) / SHOOTER_SPEED <= 0.1) { // Checks if
                                                                                                           // flywheel is
