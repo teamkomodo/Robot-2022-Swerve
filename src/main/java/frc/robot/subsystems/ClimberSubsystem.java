@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -20,9 +19,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public boolean climbing;
 
-  private PIDController rotationPIDController;
-  private PIDController chainsawPIDController;
-
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     this.m_leftActuatorMotor = new TalonFX(13);
@@ -30,9 +26,6 @@ public class ClimberSubsystem extends SubsystemBase {
     this.m_chainsawMotor = new CANSparkMax(18, MotorType.kBrushless);
 
     this.climbing = false;
-
-    this.rotationPIDController = new PIDController(0.5, 0, 0);
-    this.chainsawPIDController = new PIDController(0.5, 0, 0);
   }
 
   @Override
@@ -80,16 +73,6 @@ public class ClimberSubsystem extends SubsystemBase {
     m_rightActuatorMotor.set(ControlMode.PercentOutput, speed + getRotationDiff() / 5);
   }
 
-  public void setRotationPosition(double position) {
-    if (position < 0) {
-      position = 0;
-    } else if (position > 100) {
-      position = 100;
-    }
-
-    setRotationSpeed(rotationPIDController.calculate(getRotationPosition(), position));
-  }
-
   private double getChainsawPosition() {
     return m_chainsawMotor.getEncoder().getPosition();
   }
@@ -108,13 +91,5 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     m_chainsawMotor.set(speed);
-  }
-
-  public void setChainsawPosition(double position) {
-    if (position < 0) {
-      position = 0;
-    }
-
-    setChainsawSpeed(chainsawPIDController.calculate(getChainsawPosition(), position));
   }
 }
