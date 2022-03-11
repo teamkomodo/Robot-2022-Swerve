@@ -13,8 +13,12 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoComand extends CommandBase {
-  private static final double SHOOTER_SPEED = 3000;
-  private static final double DRIVEBACK_TIME = 1;
+  private static final double SHOOTER_DELAY = 1; // Time after auto start to start flywheel (seconds)
+  private static final double SHOOTER_RUN_LENGHT = 10; // Time to run shooter after flywheel start (seconds)
+  private static final double SHOOTER_SPEED = 2500; // Target RPM for flywheel (RPM)
+
+  private static final double DRIVEBACK_DELAY = 11; // Time after auto start to drive backwards (seconds)
+  private static final double DRIVEBACK_TIME = 0.75; // Time to drive backwards (seconds)
 
   private final DrivetrainSubsystem m_drivetrainSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
@@ -53,13 +57,6 @@ public class AutoComand extends CommandBase {
       m_intakeSubsystem.setIntakeSpeed(0);
     }
 
-    // Drive back to get in position for shooter
-    if (autoTimer.get() <= DRIVEBACK_TIME) {
-      m_drivetrainSubsystem.drive(new ChassisSpeeds(50.0, 0.0, 0.0));
-    } else {
-      m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
-    }
-
     // Move chainsaw to correct position
     if (autoTimer.get() <= 0.5) {
       m_climberSubsystem.setChainsawSpeed(1);
@@ -67,8 +64,8 @@ public class AutoComand extends CommandBase {
       m_climberSubsystem.setChainsawSpeed(0);
     }
 
-    // Shooter after driveback
-    if (autoTimer.get() > DRIVEBACK_TIME) {
+    // Start shooter spinup
+    if (autoTimer.get() >= SHOOTER_DELAY && autoTimer.get() <= SHOOTER_DELAY + SHOOTER_RUN_LENGHT) {
       m_shooterSubsystem.setShooterSpeed(SHOOTER_SPEED);
       if (Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - SHOOTER_SPEED) / SHOOTER_SPEED <= 0.1) { // Checks if
                                                                                                           // flywheel is
@@ -83,6 +80,13 @@ public class AutoComand extends CommandBase {
       m_intakeSubsystem.setIntakeSpeed(0);
       m_shooterSubsystem.setIndexerSpeed(0);
       m_shooterSubsystem.setShooterSpeed(0);
+    }
+
+    // Drive back
+    if (autoTimer.get() >= DRIVEBACK_DELAY && autoTimer.get() <= DRIVEBACK_TIME + DRIVEBACK_DELAY) {
+      m_drivetrainSubsystem.drive(new ChassisSpeeds(-5.0, 0.0, 0.0));
+    } else {
+      m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
     }
   }
 
