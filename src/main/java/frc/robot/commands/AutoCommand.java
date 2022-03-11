@@ -87,7 +87,7 @@ public class AutoCommand extends CommandBase {
     }
 
     // Drive back
-    if (autoTimer.get() >= DRIVEBACK_DELAY && autoTimer.get() <= DRIVEBACK_TIME + DRIVEBACK_DELAY) {
+    if (autoTimer.get() >= DRIVEBACK_DELAY && autoTimer.get() <= DRIVEBACK_DELAY + DRIVEBACK_TIME) {
       m_drivetrainSubsystem.drive(new ChassisSpeeds(-5.0, 0.0, 0.0));
     } else {
       m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
