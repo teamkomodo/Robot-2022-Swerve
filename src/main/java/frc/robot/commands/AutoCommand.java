@@ -13,6 +13,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoCommand extends CommandBase {
+  private static final double INTAKE_RUN_LENGTH = 1; // Time to run intake at start of auto (seconds)
+
+  private static final double CHAINSAW_RUN_LENGTH = 0.5; // Time to run chainsaw at start of auto (seconds)
+  
   private static final double SHOOTER_DELAY = 1; // Time after auto start to start flywheel (seconds)
   private static final double SHOOTER_RUN_LENGTH = 10; // Time to run shooter after flywheel start (seconds)
   private static final double SHOOTER_SPEED = 2500; // Target RPM for flywheel (RPM)
@@ -51,14 +55,14 @@ public class AutoCommand extends CommandBase {
   @Override
   public void execute() {
     // Run intake to drop out of shooter path
-    if (autoTimer.get() < 1) {
+    if (autoTimer.get() < INTAKE_RUN_LENGTH) {
       m_intakeSubsystem.setIntakeSpeed(1);
     } else {
       m_intakeSubsystem.setIntakeSpeed(0);
     }
 
     // Move chainsaw to correct position
-    if (autoTimer.get() <= 0.5) {
+    if (autoTimer.get() <= CHAINSAW_RUN_LENGTH) {
       m_climberSubsystem.setChainsawSpeed(1);
     } else {
       m_climberSubsystem.setChainsawSpeed(0);
