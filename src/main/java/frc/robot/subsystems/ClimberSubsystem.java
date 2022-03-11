@@ -79,12 +79,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void setChainsawSpeed(double speed) {
     System.out.println("Chainsaw >> " + getChainsawPosition());
-    if (getChainsawPosition() > 90 && speed >= 0) {
+    if (getChainsawPosition() > 92.5 && speed >= 0) {
       m_chainsawMotor.set(0);
 
       return;
     }
-    if (getChainsawPosition() < -90 && speed <= 0) {
+    if (getChainsawPosition() < -92.5 && speed <= 0) {
       m_chainsawMotor.set(0);
 
       return;
