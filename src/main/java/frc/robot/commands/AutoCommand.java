@@ -16,13 +16,13 @@ public class AutoCommand extends CommandBase {
   private static final double INTAKE_RUN_LENGTH = 1; // Time to run intake at start of auto (seconds)
 
   private static final double CHAINSAW_RUN_LENGTH = 0.5; // Time to run chainsaw at start of auto (seconds)
-  
+
   private static final double SHOOTER_DELAY = 1; // Time after auto start to start flywheel (seconds)
-  private static final double SHOOTER_RUN_LENGTH = 10; // Time to run shooter after flywheel start (seconds)
+  private static final double SHOOTER_RUN_LENGTH = 2.5; // Time to run shooter after flywheel start (seconds)
   private static final double SHOOTER_SPEED = 2500; // Target RPM for flywheel (RPM)
 
-  private static final double DRIVEBACK_DELAY = 11; // Time after auto start to drive backwards (seconds)
-  private static final double DRIVEBACK_TIME = 0.75; // Time to drive backwards (seconds)
+  private static final double DRIVEBACK_DELAY = 5; // Time after auto start to drive backwards (seconds)
+  private static final double DRIVEBACK_TIME = 0.6; // Time to drive backwards (seconds)
 
   private final DrivetrainSubsystem m_drivetrainSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;

@@ -19,6 +19,13 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public boolean climbing;
 
+  private double leftActuatorMotorEncoderOffset;
+  private double rightActuatorMotorEncoderOffset;
+
+  private boolean enableActuatorLimits;
+  private boolean enableOffsetLimits;
+  private boolean enableChainsawLimits;
+
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     this.m_leftActuatorMotor = new TalonFX(13);
@@ -26,6 +33,13 @@ public class ClimberSubsystem extends SubsystemBase {
     this.m_chainsawMotor = new CANSparkMax(18, MotorType.kBrushless);
 
     this.climbing = false;
+
+    this.leftActuatorMotorEncoderOffset = 0;
+    this.rightActuatorMotorEncoderOffset = 0;
+
+    this.enableActuatorLimits = true;
+    this.enableOffsetLimits = true;
+    this.enableChainsawLimits = true;
   }
 
   @Override
@@ -33,12 +47,20 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  private double getRotationDiff() {
-    return (m_leftActuatorMotor.getSelectedSensorPosition() - m_rightActuatorMotor.getSelectedSensorPosition()) / 2048;
+  public double getRotationDiff() {
+    return (getLeftActuatorPosition() - getRightActuatorPosition()) / 2048;
+  }
+
+  private double getLeftActuatorPosition() {
+    return m_leftActuatorMotor.getSelectedSensorPosition() - leftActuatorMotorEncoderOffset;
+  }
+
+  private double getRightActuatorPosition() {
+    return m_rightActuatorMotor.getSelectedSensorPosition() - rightActuatorMotorEncoderOffset;
   }
 
   private boolean checkRotationAlignment() {
-    if (Math.abs(getRotationDiff()) > 10) {
+    if (Math.abs(getRotationDiff()) > 25) {
       return false;
     }
 
@@ -46,24 +68,24 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   private double getRotationPosition() {
-    return m_leftActuatorMotor.getSelectedSensorPosition() / 2048;
+    return getLeftActuatorPosition() / 2048;
   }
 
   public void setRotationSpeed(double speed) {
     System.out.println("Rotation >> " + getRotationPosition());
-    if (!checkRotationAlignment()) {
+    if (!checkRotationAlignment() && enableOffsetLimits) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
       return;
     }
-    if (getRotationPosition() > 250 && speed >= 0) {
+    if (getRotationPosition() > 253 && speed >= 0 && enableActuatorLimits) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
       return;
     }
-    if (getRotationPosition() < 0 && speed <= 0) {
+    if (getRotationPosition() < 0 && speed <= 0 && enableActuatorLimits) {
       m_leftActuatorMotor.set(ControlMode.PercentOutput, 0);
       m_rightActuatorMotor.set(ControlMode.PercentOutput, 0);
 
@@ -76,20 +98,48 @@ public class ClimberSubsystem extends SubsystemBase {
   private double getChainsawPosition() {
     return m_chainsawMotor.getEncoder().getPosition();
   }
-
   public void setChainsawSpeed(double speed) {
     System.out.println("Chainsaw >> " + getChainsawPosition());
-    if (getChainsawPosition() > 92.5 && speed >= 0) {
+    if (getChainsawPosition() > 89 && speed >= 0 && enableChainsawLimits) {
       m_chainsawMotor.set(0);
 
       return;
     }
-    if (getChainsawPosition() < -92.5 && speed <= 0) {
+    if (getChainsawPosition() < -92 && speed <= 0 && enableChainsawLimits) {
       m_chainsawMotor.set(0);
 
       return;
     }
 
     m_chainsawMotor.set(speed);
+  }
+
+  public void resetActuatorPosition() {
+    leftActuatorMotorEncoderOffset = m_leftActuatorMotor.getSelectedSensorPosition();
+    rightActuatorMotorEncoderOffset = m_rightActuatorMotor.getSelectedSensorPosition();
+  }
+
+  public void diableActuatorLimits() {
+    this.enableActuatorLimits = false;
+  }
+
+  public void enableActuatorLimits() {
+    this.enableActuatorLimits = true;
+  }
+
+  public void disableOffsetLimits() {
+    this.enableOffsetLimits = false;
+  }
+
+  public void enableOffsetLimits() {
+    this.enableOffsetLimits = true;
+  }
+
+  public void enableChainsawLimits() {
+    this.enableChainsawLimits = true;
+  }
+  
+  public void disableChainsawLimits() {
+    this.enableChainsawLimits = false;
   }
 }

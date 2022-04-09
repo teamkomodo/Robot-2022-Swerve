@@ -7,19 +7,18 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeCommand extends CommandBase {
   private final IntakeSubsystem m_intakeSubsystem;
 
-  private final Button m_intakeToggle;
+  private final boolean m_reverseToggle;
   private final DoubleSupplier m_intakeTrim;
 
   /** Creates a new IntakeCommand. */
-  public IntakeCommand(IntakeSubsystem subsystem, Button intakeToggle, DoubleSupplier intakeTrim) {
+  public IntakeCommand(IntakeSubsystem subsystem, boolean reverseToggle, DoubleSupplier intakeTrim) {
     this.m_intakeSubsystem = subsystem;
-    this.m_intakeToggle = intakeToggle;
+    this.m_reverseToggle = reverseToggle;
     this.m_intakeTrim = intakeTrim;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,7 +33,7 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeSubsystem.setIntakeSpeed((m_intakeToggle.getAsBoolean() ? -1 : 1) * m_intakeTrim.getAsDouble());
+    m_intakeSubsystem.setIntakeSpeed((m_reverseToggle ? -1 : 1) * m_intakeTrim.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

@@ -7,7 +7,6 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -17,15 +16,17 @@ public class ShooterCommand extends CommandBase {
 
   private final ShooterSubsystem m_shooterSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
-  private final Button m_shooterToggle;
+
+  
+  private final boolean m_reverseToggle;
   private final DoubleSupplier m_shooterTrim;
 
   /** Creates a new ShooterCommand. */
-  public ShooterCommand(ShooterSubsystem subsystem, IntakeSubsystem intakeSubsystem, Button shooterToggle,
+  public ShooterCommand(ShooterSubsystem subsystem, IntakeSubsystem intakeSubsystem, boolean reverseToggle,
       DoubleSupplier shooterTrim) {
     this.m_shooterSubsystem = subsystem;
     this.m_intakeSubsystem = intakeSubsystem;
-    this.m_shooterToggle = shooterToggle;
+    this.m_reverseToggle = reverseToggle;
     this.m_shooterTrim = shooterTrim;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem, intakeSubsystem);
@@ -45,7 +46,7 @@ public class ShooterCommand extends CommandBase {
     System.out.println("FLYWHEEL SPEED >> " + m_shooterSubsystem.getCurrentShooterSpeed());
     if (Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - correctSpeed(SHOOTER_SPEED))
         / correctSpeed(SHOOTER_SPEED) <= INJECTION_TOLERANCE) {
-      m_shooterSubsystem.setIndexerSpeed(correctSpeed(1));
+      m_shooterSubsystem.setIndexerSpeed(correctSpeed(0.2));
       m_intakeSubsystem.setIntakeSpeed(correctSpeed(1));
     } else {
       m_shooterSubsystem.setIndexerSpeed(0);
@@ -61,16 +62,12 @@ public class ShooterCommand extends CommandBase {
     m_intakeSubsystem.setIntakeSpeed(0);
   }
 
-  private double directionSpeed(double speed) {
-    return m_shooterToggle.getAsBoolean() ? -speed : speed;
-  }
-
   private double trimSpeed(double speed) {
     return speed * m_shooterTrim.getAsDouble();
   }
 
   private double correctSpeed(double speed) {
-    return trimSpeed(directionSpeed(speed));
+    return trimSpeed(m_reverseToggle ? -speed : speed);
   }
 
   // Returns true when the command should end.
