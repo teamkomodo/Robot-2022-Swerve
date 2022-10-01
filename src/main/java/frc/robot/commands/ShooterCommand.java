@@ -41,9 +41,15 @@ public class ShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED));
+    //System.out.println("FLYWHEEL SPEED >> " + m_shooterSubsystem.getCurrentShooterSpeed());
+    if(m_reverseToggle) {
+      m_shooterSubsystem.setShooterSpeed(-0.2);
+      m_shooterSubsystem.setIndexerSpeed(-1);
+      m_intakeSubsystem.setIntakeSpeed(-1);
+      return;
+    }
 
-    System.out.println("FLYWHEEL SPEED >> " + m_shooterSubsystem.getCurrentShooterSpeed());
+    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED));
     if (Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - correctSpeed(SHOOTER_SPEED))
         / correctSpeed(SHOOTER_SPEED) <= INJECTION_TOLERANCE) {
       m_shooterSubsystem.setIndexerSpeed(correctSpeed(0.2));
@@ -67,7 +73,7 @@ public class ShooterCommand extends CommandBase {
   }
 
   private double correctSpeed(double speed) {
-    return trimSpeed(m_reverseToggle ? -speed : speed);
+    return trimSpeed(speed);
   }
 
   // Returns true when the command should end.

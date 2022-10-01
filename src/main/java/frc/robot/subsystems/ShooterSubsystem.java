@@ -67,7 +67,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_rightShootMotorPIDController.setD(D_PID);
     m_rightShootMotorPIDController.setIZone(I_PID_ZONE);
     m_rightShootMotorPIDController.setFF(RIGHT_FEED_FORWARD_PID);
-    m_rightShootMotorPIDController.setOutputRange(0, 1);
+    m_rightShootMotorPIDController.setOutputRange(-1, 1);
 
     //m_leftShootMotor.burnFlash();
     m_rightShootMotor.burnFlash();
@@ -83,8 +83,6 @@ public class ShooterSubsystem extends SubsystemBase {
       m_rightShootMotor.set(0);
       return;
     }
-    //speed += 200; // FIXME Corrects for PID-mistuning
-    //m_leftShootMotorPIDController.setReference(speed, ControlType.kVelocity);
     m_rightShootMotorPIDController.setReference(speed, ControlType.kVelocity);
   }
 
