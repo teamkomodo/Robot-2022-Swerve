@@ -17,7 +17,6 @@ public class ShooterCommand extends CommandBase {
   private final ShooterSubsystem m_shooterSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
 
-  
   private final boolean m_reverseToggle;
   private final DoubleSupplier m_shooterTrim;
 

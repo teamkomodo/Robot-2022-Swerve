@@ -98,6 +98,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private double getChainsawPosition() {
     return m_chainsawMotor.getEncoder().getPosition();
   }
+
   public void setChainsawSpeed(double speed) {
     System.out.println("Chainsaw >> " + getChainsawPosition());
     if (getChainsawPosition() > 89 && speed >= 0 && enableChainsawLimits) {
@@ -138,7 +139,7 @@ public class ClimberSubsystem extends SubsystemBase {
   public void enableChainsawLimits() {
     this.enableChainsawLimits = true;
   }
-  
+
   public void disableChainsawLimits() {
     this.enableChainsawLimits = false;
   }
