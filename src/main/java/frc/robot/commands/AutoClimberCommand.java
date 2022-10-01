@@ -8,6 +8,9 @@ import com.kauailabs.navx.frc.AHRS;
 
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -23,6 +26,12 @@ public class AutoClimberCommand extends CommandBase {
 
     private double targetTheta = 0;
 
+    private ShuffleboardTab tab;
+    private NetworkTableEntry encoderPosition;
+    private NetworkTableEntry rbtworld;
+    private NetworkTableEntry barrbt;
+    private NetworkTableEntry barworld;
+
     public AutoClimberCommand(ClimberSubsystem subsystem, AHRS navX, Button override) {
         this.m_climberSubsystem = subsystem;
         this.override = override;
@@ -37,11 +46,20 @@ public class AutoClimberCommand extends CommandBase {
     public void initialize() {
         m_climberSubsystem.climbing = true;
         m_climberSubsystem.running_automatic = true;
+        tab = Shuffleboard.getTab("Auto climber");
+        encoderPosition = tab.add("Encoder Position", 0).getEntry();
+        rbtworld = tab.add("Robot to World angle", 0).getEntry();
+        barrbt = tab.add("Bar to Robot angle", 0).getEntry();
+        barworld = tab.add("World bar angle", 0).getEntry();
     }
 
     @Override
     public void execute() {
         double worldTheta = getWorldTheta();
+        worldTheta = normalizeAngle(worldTheta);
+        System.out.println("Bar->World: " + worldTheta);
+        barworld.setDouble(worldTheta);
+        barworld.setDouble((m_climberSubsystem.getLeftActuatorPosition() + m_climberSubsystem.getRightActuatorPosition()) / 2.0);
         if (override.getAsBoolean()) {
             needToEnd = true;
         }
@@ -59,18 +77,23 @@ public class AutoClimberCommand extends CommandBase {
         return needToEnd;
     }
 
-    private double getWorldTheta() {
-        double x_relative = navX.getRawAccelY();
-        double y_relative = -navX.getRawAccelX();
-        double theta = Math.atan2(y_relative, x_relative) + (Math.PI / 2.0);
+    private double normalizeAngle(double theta) {
         while (theta >= 2 * Math.PI) {
             theta -= 2 * Math.PI;
         }
         while (theta < 0) {
             theta += 2 * Math.PI;
         }
-        System.out.println("Robot->World: " + (0.0 - theta));
+        return theta;
+    }
 
+    private double getWorldTheta() {
+        double x_relative = navX.getRawAccelY();
+        double y_relative = -navX.getRawAccelX();
+        double theta = Math.atan2(y_relative, x_relative) + (Math.PI / 2.0);
+        theta = normalizeAngle(theta);
+        System.out.println("Robot->World: " + Math.toDegrees(0.0 - theta));
+        rbtworld.setDouble(Math.toDegrees(0.0 - theta));
         return computeBarAngle(getPistonLength(m_climberSubsystem)) - theta;
     }
 
@@ -87,6 +110,10 @@ public class AutoClimberCommand extends CommandBase {
         double cos_gamma = (Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2.0 * a * b);
         double gamma = Math.acos(cos_gamma);
         double alpha = Math.atan(AUTO_CLIMBER_B / AUTO_CLIMBER_H);
-        return (Math.PI / 2.0) - (gamma + alpha);
+        double barAngle = (Math.PI / 2.0) - (gamma + alpha);
+        barAngle = normalizeAngle(barAngle);
+        System.out.println("Bar->Robot: " + Math.toDegrees(barAngle));
+        barrbt.setDouble(barAngle);
+        return barAngle;
     }
 }
