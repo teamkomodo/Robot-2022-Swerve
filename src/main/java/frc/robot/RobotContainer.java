@@ -6,11 +6,15 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commands.AutoClimberCommand;
 import frc.robot.commands.AutoCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefaultDriveCommand;
@@ -32,6 +36,7 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
@@ -45,6 +50,7 @@ public class RobotContainer {
   private final XboxController OCXboxController = new XboxController(3);
 
   private final DigitalInput rotationLimitSwitchInput = new DigitalInput(0);
+  private AHRS navX = null;
 
   // Easiest to define this here so I don't have to pass through scopes with dependency injection (Gross Code)
   Button chillModeToggle = new Button(() -> OCButtonController.getRawButton(2));
@@ -53,6 +59,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    navX = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
     // Set up the default command for the drivetrain.
     // The controls are for field-oriented driving:
     // Left stick Y axis -> forward and backwards movement
@@ -65,7 +72,7 @@ public class RobotContainer {
         () -> -modifyAxis(rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(rightJoystick.getRawAxis(2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
         chillModeToggle));
-
+    m_drivetrainSubsystem.setNavX(navX);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -90,6 +97,7 @@ public class RobotContainer {
     DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1) / 2;
 
     Button climbEnableButton = new Button(() -> leftJoystick.getRawButton(1));
+    Button autoClimbEnableButton = new Button(() -> leftJoystick.getRawButton(2));
     DoubleSupplier climberRotationSupplier = () -> -leftJoystick.getRawAxis(1);
     DoubleSupplier climberChainsawSuppler = () -> rightJoystick.getRawAxis(1);
     Button rotationLimitSwitch = new Button(() -> !rotationLimitSwitchInput.get());
@@ -101,6 +109,8 @@ public class RobotContainer {
 
     intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, false, intakeTrimSupplier));
     intakeReverseButton.whileHeld(new IntakeCommand(m_intakeSubsystem, true, intakeTrimSupplier));
+
+    autoClimbEnableButton.whileHeld(new AutoClimberCommand(m_climberSubsystem, navX, null));
 
     shooterButton
         .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, false, shooterTrimSupplier));
