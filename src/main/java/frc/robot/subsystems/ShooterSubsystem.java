@@ -82,12 +82,8 @@ public class ShooterSubsystem extends SubsystemBase {
       //m_leftShootMotor.set(0);
       m_rightShootMotor.set(0);
       return;
-    } else if (speed < 0) {
-      //m_leftShootMotor.set(speed);
-      m_rightShootMotor.set(speed);
-      return;
     }
-    speed += 200; // FIXME Corrects for PID-mistuning
+    //speed += 200; // FIXME Corrects for PID-mistuning
     //m_leftShootMotorPIDController.setReference(speed, ControlType.kVelocity);
     m_rightShootMotorPIDController.setReference(speed, ControlType.kVelocity);
   }
