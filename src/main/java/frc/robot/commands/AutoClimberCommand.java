@@ -59,10 +59,10 @@ public class AutoClimberCommand extends CommandBase {
         worldTheta = normalizeAngle(worldTheta);
         System.out.println("Bar->World: " + worldTheta);
         barworld.setDouble(worldTheta);
-        barworld.setDouble((m_climberSubsystem.getLeftActuatorPosition() + m_climberSubsystem.getRightActuatorPosition()) / 2.0);
-        if (override.getAsBoolean()) {
-            needToEnd = true;
-        }
+        encoderPosition.setDouble((m_climberSubsystem.getLeftActuatorPosition() + m_climberSubsystem.getRightActuatorPosition()) / 2.0);
+        // if (override.getAsBoolean()) {
+        //     needToEnd = true;
+        // }
         m_climberSubsystem.setRotationSpeed(k_P * (targetTheta - worldTheta));
     }
 
