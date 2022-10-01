@@ -53,4 +53,11 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 8; // FIXME Set back right steer encoder ID
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(168.65); // FIXME Measure and set back
                                                                                          // right steer offset
+    public static final double AUTO_CLIMBER_L = 0.1556; // Meters
+    public static final double AUTO_CLIMBER_B = 0.0889; // Meters
+    public static final double AUTO_CLIMBER_H = 0.8446; // Meters
+    public static final double AUTO_CLIMBER_METERS_PER_REV = 0.00254; // Meters
+    public static final double AUTO_CLIMBER_REVS_PER_TICK = 1.0 / 2048.0; // Revolutions
+    public static final double AUTO_CLIMBER_ZERO_PISTON_LENGTH = 0.7112; // Meters
+    public static final double AUTO_CLIMBER_TARGET_ANGLE = -0.56885; // Radians
 }

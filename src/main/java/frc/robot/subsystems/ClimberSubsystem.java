@@ -26,6 +26,8 @@ public class ClimberSubsystem extends SubsystemBase {
   private boolean enableOffsetLimits;
   private boolean enableChainsawLimits;
 
+  public boolean running_automatic = false;
+
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     this.m_leftActuatorMotor = new TalonFX(13);
@@ -51,11 +53,11 @@ public class ClimberSubsystem extends SubsystemBase {
     return (getLeftActuatorPosition() - getRightActuatorPosition()) / 2048;
   }
 
-  private double getLeftActuatorPosition() {
+  public double getLeftActuatorPosition() {
     return m_leftActuatorMotor.getSelectedSensorPosition() - leftActuatorMotorEncoderOffset;
   }
 
-  private double getRightActuatorPosition() {
+  public double getRightActuatorPosition() {
     return m_rightActuatorMotor.getSelectedSensorPosition() - rightActuatorMotorEncoderOffset;
   }
 
@@ -98,6 +100,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private double getChainsawPosition() {
     return m_chainsawMotor.getEncoder().getPosition();
   }
+
   public void setChainsawSpeed(double speed) {
     System.out.println("Chainsaw >> " + getChainsawPosition());
     if (getChainsawPosition() > 89 && speed >= 0 && enableChainsawLimits) {
@@ -138,7 +141,7 @@ public class ClimberSubsystem extends SubsystemBase {
   public void enableChainsawLimits() {
     this.enableChainsawLimits = true;
   }
-  
+
   public void disableChainsawLimits() {
     this.enableChainsawLimits = false;
   }

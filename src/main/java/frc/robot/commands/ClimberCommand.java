@@ -44,6 +44,8 @@ public class ClimberCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (m_climberSubsystem.running_automatic) {return;}
+    
     System.out.println("DIFF >> " + m_climberSubsystem.getRotationDiff());
 
     if (m_disableClimbLimitToggle.getAsBoolean()) {
