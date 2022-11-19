@@ -7,12 +7,15 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterCommand extends CommandBase {
   private final static double SHOOTER_SPEED = 3000;
   private final static double INJECTION_TOLERANCE = 0.1;
+
+  private final static double MAX_VEL_BASE_SLOW_MUL = 0.5;
 
   private final ShooterSubsystem m_shooterSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
@@ -49,7 +52,7 @@ public class ShooterCommand extends CommandBase {
       return;
     }
 
-    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED));
+    m_shooterSubsystem.setShooterSpeed(correctSpeed(SHOOTER_SPEED) * (DrivetrainSubsystem.slowMode ? MAX_VEL_BASE_SLOW_MUL : 1.0));
     if (Math.abs(m_shooterSubsystem.getCurrentShooterSpeed() - correctSpeed(SHOOTER_SPEED))
         / correctSpeed(SHOOTER_SPEED) <= INJECTION_TOLERANCE) {
       m_shooterSubsystem.setIndexerSpeed(correctSpeed(0.2));

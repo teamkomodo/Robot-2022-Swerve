@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class ClimberCommand extends CommandBase {
   private final ClimberSubsystem m_climberSubsystem;
@@ -19,6 +20,8 @@ public class ClimberCommand extends CommandBase {
   private final Button m_rotationLimitSwitch;
   private final Button m_disableClimbLimitToggle;
   private final Button m_disableClimbOffsetLimitToggle;
+
+  public static final double MAX_VEL_BASE_SLOW_MUL = 0.3;
 
   /** Creates a new ClimberCommand. */
   public ClimberCommand(ClimberSubsystem subsystem, DoubleSupplier rotationSpeed,
@@ -58,8 +61,8 @@ public class ClimberCommand extends CommandBase {
       m_climberSubsystem.enableOffsetLimits();
     }
 
-    m_climberSubsystem.setRotationSpeed(m_rotationSpeed.getAsDouble());
-    m_climberSubsystem.setChainsawSpeed(m_chainsawSpeed.getAsDouble());
+    m_climberSubsystem.setRotationSpeed(m_rotationSpeed.getAsDouble() * (DrivetrainSubsystem.slowMode ? MAX_VEL_BASE_SLOW_MUL : 1.0));
+    m_climberSubsystem.setChainsawSpeed(m_chainsawSpeed.getAsDouble() * (DrivetrainSubsystem.slowMode ? MAX_VEL_BASE_SLOW_MUL : 1.0));
   }
 
   // Called once the command ends or is interrupted.
