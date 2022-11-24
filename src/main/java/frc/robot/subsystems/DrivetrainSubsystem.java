@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 import static frc.robot.Constants.*;
 
@@ -162,8 +163,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
 
+  long prevt = 0;
+  double locX;
+  double locY;
+  double locTheta;
+
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
+    long currt = System.currentTimeMillis();
+    if (prevt != 0) {
+      double dt = (currt - prevt) / 1000.0;
+      locX += chassisSpeeds.vxMetersPerSecond * dt;
+      locY += chassisSpeeds.vyMetersPerSecond * dt;
+      locTheta = chassisSpeeds.omegaRadiansPerSecond * dt;
+      RobotContainer.field2d.setRobotPose(locX, locY, new Rotation2d(locTheta));
+    }
+    prevt = currt;
   }
 
   @Override

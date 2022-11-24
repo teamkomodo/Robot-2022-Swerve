@@ -48,7 +48,9 @@ public class RobotContainer {
 
   private final DigitalInput rotationLimitSwitchInput = new DigitalInput(0);
 
-  private final Field2d field2d = new Field2d();
+  public static final Field2d field2d = new Field2d();
+
+  private static final boolean useXBOXDrive = true;
 
   // Easiest to define this here so I don't have to pass through scopes with dependency injection (Gross Code)
   Button chillModeToggle = new Button(() -> OCButtonController.getRawButton(2));
@@ -65,9 +67,9 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
         m_climberSubsystem,
-        () -> -modifyAxis(rightJoystick.getRawAxis(1)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(rightJoystick.getRawAxis(2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+        () -> -modifyAxis((useXBOXDrive ? OCXboxController.getRightX() : 0) + rightJoystick.getRawAxis(1)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis((useXBOXDrive ? OCXboxController.getRightY() : 0) + rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis((useXBOXDrive ? OCXboxController.getLeftX() : 0) + rightJoystick.getRawAxis(2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
         chillModeToggle));
 
     // Configure the button bindings
