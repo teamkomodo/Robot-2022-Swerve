@@ -87,43 +87,43 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Button gyroZeroButton = new Button(() -> rightJoystick.getRawButton(1));
+    // Button gyroZeroButton = new Button(() -> rightJoystick.getRawButton(1));
 
-    Button intakeButton = new Button(() -> OCXboxController.getRightBumper());
-    Button intakeReverseButton = new Button(() -> OCXboxController.getLeftBumper());
-    DoubleSupplier intakeTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1) / 2;
+    // Button intakeButton = new Button(() -> OCXboxController.getRightBumper());
+    // Button intakeReverseButton = new Button(() -> OCXboxController.getLeftBumper());
+    // DoubleSupplier intakeTrimSupplier = () -> (OCButtonController.getRawAxis(0) + 1) / 2;
 
-    Button shooterButton = new Button(() -> OCXboxController.getRightTriggerAxis() >= 0.5 ? true : false);
-    Button shooterReverseButton = new Button(() -> OCXboxController.getLeftTriggerAxis() >= 0.5 ? true : false);
-    DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1) / 2;
+    // Button shooterButton = new Button(() -> OCXboxController.getRightTriggerAxis() >= 0.5 ? true : false);
+    // Button shooterReverseButton = new Button(() -> OCXboxController.getLeftTriggerAxis() >= 0.5 ? true : false);
+    // DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1) / 2;
     Button visionButton = new Button(() -> OCXboxController.getAButton());
 
-    Button climbEnableButton = new Button(() -> leftJoystick.getRawButton(1));
-    DoubleSupplier climberRotationSupplier = () -> -leftJoystick.getRawAxis(1);
-    DoubleSupplier climberChainsawSuppler = () -> rightJoystick.getRawAxis(1);
-    Button rotationLimitSwitch = new Button(() -> !rotationLimitSwitchInput.get());
-    Button disableClimbLimitToggle = new Button(() -> OCButtonController.getRawButton(3));
-    Button disableClimbOffsetLimitToggle = new Button(() -> OCButtonController.getRawButton(1));
+    // Button climbEnableButton = new Button(() -> leftJoystick.getRawButton(1));
+    // DoubleSupplier climberRotationSupplier = () -> -leftJoystick.getRawAxis(1);
+    // DoubleSupplier climberChainsawSuppler = () -> rightJoystick.getRawAxis(1);
+    // Button rotationLimitSwitch = new Button(() -> !rotationLimitSwitchInput.get());
+    // Button disableClimbLimitToggle = new Button(() -> OCButtonController.getRawButton(3));
+    // Button disableClimbOffsetLimitToggle = new Button(() -> OCButtonController.getRawButton(1));
 
     // Left button zeros the gyroscope
-    gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    // gyroZeroButton.whenPressed(m_drivetrainSubsystem::zeroGyroscope);
 
-    intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, false, intakeTrimSupplier));
-    intakeReverseButton.whileHeld(new IntakeCommand(m_intakeSubsystem, true, intakeTrimSupplier));
+    // intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem, false, intakeTrimSupplier));
+    // intakeReverseButton.whileHeld(new IntakeCommand(m_intakeSubsystem, true, intakeTrimSupplier));
 
-    shooterButton
-        .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, false, shooterTrimSupplier));
-    shooterReverseButton
-        .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, true, shooterTrimSupplier));
+    // shooterButton
+    //     .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, false, shooterTrimSupplier));
+    // shooterReverseButton
+    //     .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, true, shooterTrimSupplier));
     visionButton.whileHeld(new VisionCommand());
 
     
     // Button composition so that climb isn't enabled while chill mode is enabled (Gross Code)
-    new Button(() -> climbEnableButton.and(new Button(() -> !chillModeToggle.get())).get()).toggleWhenPressed(
-        new ClimberCommand(m_climberSubsystem, climberRotationSupplier, climberChainsawSuppler, rotationLimitSwitch,
-            disableClimbLimitToggle, disableClimbOffsetLimitToggle));
+    // new Button(() -> climbEnableButton.and(new Button(() -> !chillModeToggle.get())).get()).toggleWhenPressed(
+    //     new ClimberCommand(m_climberSubsystem, climberRotationSupplier, climberChainsawSuppler, rotationLimitSwitch,
+    //         disableClimbLimitToggle, disableClimbOffsetLimitToggle));
 
-    rotationLimitSwitch.whenPressed(m_climberSubsystem::resetActuatorPosition);
+    // rotationLimitSwitch.whenPressed(m_climberSubsystem::resetActuatorPosition);
   }
 
   /**

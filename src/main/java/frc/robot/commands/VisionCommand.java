@@ -14,6 +14,7 @@ public class VisionCommand extends CommandBase {
     @Override
     public void execute() {
         PhotonPipelineResult result = camera.getLatestResult();
+        
         if (result.hasTargets()) {
             List<PhotonTrackedTarget> targets = result.getTargets();
             System.out.println("TARGET DETECTIONS:");
@@ -26,5 +27,10 @@ public class VisionCommand extends CommandBase {
         } else {
             System.out.println("No targets");
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 }
