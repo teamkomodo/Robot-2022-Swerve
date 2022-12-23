@@ -15,6 +15,7 @@ public class VisionCommand extends CommandBase {
     @Override
     public void initialize() {
         camera = new PhotonCamera("photonvision");
+        camera.setDriverMode(!camera.getDriverMode());
     }
 
     @Override
