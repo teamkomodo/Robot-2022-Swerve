@@ -40,21 +40,21 @@ public class RobotContainer {
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
 
-  private final GenericHID leftJoystick = new GenericHID(0);
-  private final GenericHID rightJoystick = new GenericHID(1);
+  // private final GenericHID leftJoystick = new GenericHID(0);
+  // private final GenericHID rightJoystick = new GenericHID(1);
 
-  private final GenericHID OCButtonController = new GenericHID(2);
+  // private final GenericHID OCButtonController = new GenericHID(2);
 
   private final XboxController OCXboxController = new XboxController(3);
 
-  private final DigitalInput rotationLimitSwitchInput = new DigitalInput(0);
+  // private final DigitalInput rotationLimitSwitchInput = new DigitalInput(0);
 
   public static final Field2d field2d = new Field2d();
 
-  private static final boolean useXBOXDrive = true;
+  // private static final boolean useXBOXDrive = true;
 
-  // Easiest to define this here so I don't have to pass through scopes with dependency injection (Gross Code)
-  Button chillModeToggle = new Button(() -> OCButtonController.getRawButton(2));
+  // // Easiest to define this here so I don't have to pass through scopes with dependency injection (Gross Code)
+  // Button chillModeToggle = new Button(() -> OCButtonController.getRawButton(2));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -65,13 +65,13 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        m_drivetrainSubsystem,
-        m_climberSubsystem,
-        () -> -modifyAxis((useXBOXDrive ? OCXboxController.getRightX() : 0) + rightJoystick.getRawAxis(1)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis((useXBOXDrive ? OCXboxController.getRightY() : 0) + rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis((useXBOXDrive ? OCXboxController.getLeftX() : 0) + rightJoystick.getRawAxis(2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-        chillModeToggle));
+    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+    //     m_drivetrainSubsystem,
+    //     m_climberSubsystem,
+    //     () -> -modifyAxis((useXBOXDrive ? OCXboxController.getRightX() : 0) + rightJoystick.getRawAxis(1)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     () -> -modifyAxis((useXBOXDrive ? OCXboxController.getRightY() : 0) + rightJoystick.getRawAxis(0)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     () -> -modifyAxis((useXBOXDrive ? OCXboxController.getLeftX() : 0) + rightJoystick.getRawAxis(2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+    //     chillModeToggle));
 
     // Configure the button bindings
     configureButtonBindings();
