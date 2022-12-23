@@ -23,6 +23,8 @@ public class VisionCommand extends CommandBase {
                 System.out.println("  X: " + corners.get(0).x);
                 System.out.println("  Y: " + corners.get(0).y);
             }
+        } else {
+            System.out.println("No targets");
         }
     }
 }
