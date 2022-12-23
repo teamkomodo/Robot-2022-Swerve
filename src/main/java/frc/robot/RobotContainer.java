@@ -17,6 +17,7 @@ import frc.robot.commands.AutoCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.VisionCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -95,6 +96,7 @@ public class RobotContainer {
     Button shooterButton = new Button(() -> OCXboxController.getRightTriggerAxis() >= 0.5 ? true : false);
     Button shooterReverseButton = new Button(() -> OCXboxController.getLeftTriggerAxis() >= 0.5 ? true : false);
     DoubleSupplier shooterTrimSupplier = () -> (OCButtonController.getRawAxis(1) + 1) / 2;
+    Button visionButton = new Button(() -> OCXboxController.getAButton());
 
     Button climbEnableButton = new Button(() -> leftJoystick.getRawButton(1));
     DoubleSupplier climberRotationSupplier = () -> -leftJoystick.getRawAxis(1);
@@ -113,6 +115,8 @@ public class RobotContainer {
         .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, false, shooterTrimSupplier));
     shooterReverseButton
         .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, true, shooterTrimSupplier));
+    visionButton.whileHeld(new VisionCommand());
+
     
     // Button composition so that climb isn't enabled while chill mode is enabled (Gross Code)
     new Button(() -> climbEnableButton.and(new Button(() -> !chillModeToggle.get())).get()).toggleWhenPressed(
