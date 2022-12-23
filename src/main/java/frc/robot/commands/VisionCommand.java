@@ -10,11 +10,16 @@ import org.photonvision.targeting.TargetCorner;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class VisionCommand extends CommandBase {
-    PhotonCamera camera = new PhotonCamera("photonvision");
+    PhotonCamera camera;
+
+    @Override
+    public void initialize() {
+        camera = new PhotonCamera("photonvision");
+    }
+    
     @Override
     public void execute() {
         PhotonPipelineResult result = camera.getLatestResult();
-        
         if (result.hasTargets()) {
             List<PhotonTrackedTarget> targets = result.getTargets();
             System.out.println("TARGET DETECTIONS:");
