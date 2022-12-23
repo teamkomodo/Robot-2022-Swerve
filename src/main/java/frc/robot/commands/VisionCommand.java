@@ -16,10 +16,11 @@ public class VisionCommand extends CommandBase {
     public void initialize() {
         camera = new PhotonCamera("photonvision");
     }
-    
+
     @Override
     public void execute() {
         PhotonPipelineResult result = camera.getLatestResult();
+        System.out.println("Driver mode: " + camera.getDriverMode());
         if (result.hasTargets()) {
             List<PhotonTrackedTarget> targets = result.getTargets();
             System.out.println("TARGET DETECTIONS:");
