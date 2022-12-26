@@ -115,7 +115,7 @@ public class RobotContainer {
     //     .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, false, shooterTrimSupplier));
     // shooterReverseButton
     //     .whileHeld(new ShooterCommand(m_shooterSubsystem, m_intakeSubsystem, true, shooterTrimSupplier));
-    visionButton.whileHeld(new VisionCommand());
+    visionButton.whileHeld(new VisionCommand(m_drivetrainSubsystem));
 
     
     // Button composition so that climb isn't enabled while chill mode is enabled (Gross Code)
