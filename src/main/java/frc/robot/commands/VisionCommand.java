@@ -38,24 +38,24 @@ public class VisionCommand extends CommandBase {
             List<PhotonTrackedTarget> targets = result.getTargets();
             System.out.println("TARGET DETECTIONS:");
             for (PhotonTrackedTarget target : targets) {
-                // System.out.println(" ID: " + target.getFiducialId());
-                // List<TargetCorner> corners = target.getCorners();
-                // System.out.println(" X: " + corners.get(0).x);
-                // System.out.println(" Y: " + corners.get(0).y);
                 if (target.getFiducialId() == 4) {
-                    List<TargetCorner> corners = target.getCorners();
-                    double x = 0;
-                    for (TargetCorner c : corners) {
-                        x += c.x;
+                    double yaw = target.getYaw();
+                    System.out.println("Yaw: " + yaw);
+                    if (Math.abs(yaw) < 5) {
+                        drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, 0));
+                        return;
                     }
-                    x /= corners.size(); // Average x-coords
-                    System.out.println("Average x: " + x);
-                    drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, x > 320 ? ROTATION_SPEED : -ROTATION_SPEED));
+                    drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, yaw > 0 ? ROTATION_SPEED : -ROTATION_SPEED));
                 }
             }
         } else {
             drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, 0));
         }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, 0));
     }
 
     @Override
