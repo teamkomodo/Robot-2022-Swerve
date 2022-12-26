@@ -14,7 +14,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class VisionCommand extends CommandBase {
     PhotonCamera camera;
 
-    private final double ROTATION_SPEED = 0.1;
+    private final double ROTATION_SPEED = -3;
 
     private DrivetrainSubsystem drivetrainSubsystem;
 
@@ -33,7 +33,6 @@ public class VisionCommand extends CommandBase {
     @Override
     public void execute() {
         PhotonPipelineResult result = camera.getLatestResult();
-        System.out.println("Driver mode: " + camera.getDriverMode());
         if (result.hasTargets()) {
             List<PhotonTrackedTarget> targets = result.getTargets();
             System.out.println("TARGET DETECTIONS:");
@@ -45,7 +44,7 @@ public class VisionCommand extends CommandBase {
                         drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, 0));
                         return;
                     }
-                    drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, yaw > 0 ? ROTATION_SPEED : -ROTATION_SPEED));
+                    drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, (yaw / 25.0) * ROTATION_SPEED));
                 }
             }
         } else {
