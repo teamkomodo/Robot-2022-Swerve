@@ -30,6 +30,13 @@ public class VisionCommand extends CommandBase {
         camera.setDriverMode(false);
     }
 
+    public double cap(double c, double v) {
+        if (Math.abs(v) < c) {
+            return v;
+        }
+        return v > 0 ? c : -c;
+    }
+
     @Override
     public void execute() {
         PhotonPipelineResult result = camera.getLatestResult();
@@ -44,7 +51,7 @@ public class VisionCommand extends CommandBase {
                         drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, 0));
                         return;
                     }
-                    drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, (yaw / 25.0) * ROTATION_SPEED));
+                    drivetrainSubsystem.drive(new ChassisSpeeds(0, 0, cap(1, (yaw / 25.0) * ROTATION_SPEED)));
                 }
             }
         } else {
